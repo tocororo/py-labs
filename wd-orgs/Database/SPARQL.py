@@ -13,7 +13,7 @@ def get_resultsInstanceOf(QID):
                ?country  ?countryLabel
         
                 WHERE {
-                 ?item (wdt:P31)+ wd:Q43229;
+                 ?item (wdt:P31)+ wd:""" f"{QID};" """;
                                   rdfs:label ?itemLabel.
                     FILTER(lang(?itemLabel) = 'en')
                  

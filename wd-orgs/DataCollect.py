@@ -76,6 +76,11 @@ def getDataInstance(updateType):
                         _itemDescription = itemDescription[len(itemDescription) - 1]
                     else:
                         _itemDescription = None
+                    if "instanceOf" in info:
+                        instanceOf = info["instanceOf"]["value"].split('/')
+                        _instanceOf = instanceOf[len(instanceOf) - 1]
+                    else:
+                        _instanceOf = None
                     if "instanceOfLabel" in info:
                         instanceOfLabel = info["instanceOfLabel"]["value"].split('/')
                         _instanceOfLabel = instanceOfLabel[len(instanceOfLabel) - 1]
@@ -178,31 +183,15 @@ def getDataInstance(updateType):
                         _twitterUsername = None
 
                     instance = InstanceOf(
-                        _QID, None, None,
-                        _itemDescription, _instanceOfLabel, _image, _inception, _nativeLabel, _foundedBy, _foundedByLabel,
+                        _QID, None, _itemDescription,
+                        _instanceOf, _instanceOfLabel, _image, _inception, _nativeLabel, _foundedBy, _foundedByLabel,
                         _country, _countryLabel, _state, _stateLabel, _region, _regionLabel, _headquartersLocation,
                         _numEmployees, _officialWebSite, _officialWebSiteLabel, _ISNI, _GRID, _quoraTopic,
                         _twitterUsername
-
-                        # info["itemDescription"]["value"], info["instanceOfLabel"]["value"],
-                        # info["image"]["value"], info["inception"]["value"], info["nativeLabel"]["value"],
-                        # foundedBy, info["foundedByLabel"]["value"], country, info["countryLabel"]["value"],
-                        # state, info["stateLabel"]["value"], region, info["regionLabel"]["value"],
-                        # headquartersLocation, info["numEmployees"]["value"], info["officialWebSite"]["value"],
-                        # info["officialWebSiteLabel"]["value"], info["ISNI"]["value"], info["GRID"]["value"],
-                        # info["quoraTopic"]["value"], info["twitterUsername"]["value"]
                     )
-                    if updateType == '2':
+                    if updateType == 'original':
                         instance_updated = InstanceOfDao.update(instance)
                         logger.info(f'Instance Updated: {instance_updated}')
-                    elif updateType == '3':
+                    elif updateType == 'copy':
                         instance_updated = InstanceOfDao.updateCopy(instance)
                         logger.info(f'Instance Updated: {instance_updated}')
-
-# array = [{'QID': 'q955', "label": 'hre', }, {'QID': 'q512', "label": 'hre'}, {'QID': 'q4252', "label": 'hre'}]
-# print(array)
-# for postgresS in postgresSubClass:
-#     if not any(a['QID'] == postgresS.getQID() for a in array):
-#         print('no exist')
-#     else:
-#         print('exist')

@@ -6,50 +6,33 @@ import sys
 
 value = ''
 # Q43229
-while value != '4':
+while value != '5':
     value = input(str(""" 
-    1 - Obtener instancias y subclases de wikidata. 
-    2 - Actualizar informacion sobre instancias.
-    3 - Crear copia de instancias y actualizar informacion en ella.
-    4 - Salir.
-    Elija una opcion del 1-4: """))
+    1 - Crear tablas instanceOf y subClass
+    2 - Obtener instancias y subclases de wikidata. 
+    3 - Actualizar informacion sobre instancias.
+    4 - Crear copia de instancias y actualizar informacion en ella.
+    5 - Eliminar tablas
+    6 - Salir.
+    Elija una opcion del 1-5: """))
     if value == '1':
-        _class = input(str('Prevea un id de clase de wikidata: '))
-        collect(_class)
+        InstanceOfDao.createTableInstance()
+        InstanceOfDao.createTableSubclass()
     elif value == '2':
-        getDataInstance('2')
+        _class = input(str('Provea un id de clase de wikidata: '))
+        collect(_class)
     elif value == '3':
-        InstanceOfDao.createTableInfo()
-        getDataInstance('3')
+        InstanceOfDao.updateFieldsInstancesToNull()
+        getDataInstance('original')
     elif value == '4':
+        InstanceOfDao.createInstanceCopy()
+        InstanceOfDao.updateCopyFieldsInstancesToNull()
+        getDataInstance('copy')
+    elif value == '4':
+        InstanceOfDao.dropTables()
+        InstanceOfDao.dropFunctions()
+    elif value == '6':
         sys.exit()
 
 if __name__ == '__main__':
     ...
-
-# _class = input(str('Enter one class id: '))
-# get_data = ''
-# while _class == '':
-#     _class = input(str('Enter one class id: '))
-# if _class != '':
-#     collect(_class)
-#     InstanceOfDao.createTableInfo()
-#     while get_data != 'y' or get_data != 'n':
-#         get_data = input(str('Enter yes(y) for collect info of instances or no(n) for finish: '))
-#         if get_data == 'y':
-#             getDataInstance(2)
-#         elif get_data == 'n':
-#             sys.exit()
-        
-# array = [1, 2, 3, 4, 8]
-# array1 = [0,586,5,54,4,56]
-# for num in array:
-#         if not any( num == n for n in array1):
-#             array1.append(num)
-#             print(array1)
-
-# array = [1, 2, 3, 4, 8, 9]
-# array1 = [0,586,5,54,4,56]
-# 
-# array.extend(array1)
-# print(array)
