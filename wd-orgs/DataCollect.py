@@ -183,8 +183,8 @@ def getDataInstance(updateType):
                         _twitterUsername = None
 
                     instance = InstanceOf(
-                        _QID, None, _itemDescription,
-                        _instanceOf, _instanceOfLabel, _image, _inception, _nativeLabel, _foundedBy, _foundedByLabel,
+                        _QID, None, _instanceOf,
+                        _itemDescription, _instanceOfLabel, _image, _inception, _nativeLabel, _foundedBy, _foundedByLabel,
                         _country, _countryLabel, _state, _stateLabel, _region, _regionLabel, _headquartersLocation,
                         _numEmployees, _officialWebSite, _officialWebSiteLabel, _ISNI, _GRID, _quoraTopic,
                         _twitterUsername
