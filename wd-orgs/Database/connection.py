@@ -4,7 +4,7 @@ import sys
 
 
 class Connection:
-    __DATABASE = 'wikidata'
+    __DATABASE = 'wd-orgs'
     __USERNAME = 'postgres'
     __PASSWORD = 'admin'
     __DB_PORT = '5432'

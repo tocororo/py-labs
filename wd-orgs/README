@@ -1,21 +1,29 @@
+PSOS A SEGUIR:
+
+para crear database wd-orgs y permitir conexion con la app :
+    sudo su - postgres psql
+    \password postgres
+    admin
+    CREATE DATABASE wd-orgs
+
 para ejecutarlo desde terminal:
-	cd <-proyect-path> PYTHONPATH=deps python3 main.py
+	cd <proyect-path> PYTHONPATH=deps python3 main.py
 	
 para crear un .exe
 	pip install pyinstaller
-	cd <-proyect-path> pyinstaller main.py
+	cd <proyect-path> pyinstaller main.py
 	
 	dirigirse al directorio dist y ejecutar el archivo main
 	
-para exportar BD postgresql
-	pg_dump -U postgres -h localhost wikidata >> orgs-wikidata.pgsql
+para exportar database postgresql
+	pg_dump -U postgres -h localhost wk-orgs >> wd-orgs.pgsql
 	password: wikidata
 	
 	---encaso de error---
 		**pg_dump: SQL command failed
 		**pg_dump: Error message from server: ERROR:  permission denied for schema topology
 		**pg_dump: The command was: LOCK TABLE topology.topology IN ACCESS SHARE MODE
-	pg_dump -U postgres -h localhost wikidata -N topology -T spatial_ref_sys >> orgs-wikidata.pgsql
-	
-para importar BD postgresql
-	psql -U postgres -h localhost wikidata << orgs-wikidata.pgsql
+	pg_dump -U postgres -h localhost wikidata -N topology -T spatial_ref_sys >> wd-orgs.pgsql
+	----------------------
+para importar database postgresql
+	psql -U postgres -h localhost wikidata << wd-orgs.pgsql
