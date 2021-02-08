@@ -5,10 +5,16 @@ from Database.subClassDao import SubClassDao
 from Database.instanceOfDao import InstanceOfDao
 from Database.SPARQL import get_resultsSubClass, get_resultsInstanceOf, get_infoInstace
 
+import time
+from random import randint
 
 # Q43229
 def collect(QID):
+    sleep_time = randint(3, 9)
+    print('sleep {0} seconds'.format(sleep_time))
+    time.sleep(sleep_time)
     sparqlInstanceOf = get_resultsInstanceOf(QID)
+
     # print(sparqlInstanceOf)
     if len(sparqlInstanceOf["results"]["bindings"]) > 0:
         for sparqlI in sparqlInstanceOf["results"]["bindings"]:
@@ -16,7 +22,12 @@ def collect(QID):
                 instanceCollect(sparqlI, QID)
 
     postgresSubClass = SubClassDao.select()
+
+    sleep_time = randint(3, 9)
+    print('sleep {0} seconds'.format(sleep_time))
+    time.sleep(sleep_time)
     sparqlSubClass = get_resultsSubClass(QID)
+
     if len(sparqlSubClass["results"]["bindings"]) > 0:
         for sparqlS in sparqlSubClass["results"]["bindings"]:
             _QID = sparqlS["item"]["value"].split('/')
