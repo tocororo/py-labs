@@ -2,7 +2,7 @@ from Class.instanceOf import InstanceOf
 from Database.cursorPool import CursorPool
 from logger_base import logger
 
-
+from .connection import DB_USERNAME
 class InstanceOfDao:
     '''
     DAO (Data Access Object) 
@@ -39,7 +39,7 @@ class InstanceOfDao:
                         TABLESPACE pg_default;                        
                         
                         ALTER TABLE public."instanceOf"
-                            OWNER to postgres;
+                            OWNER to """ f'{DB_USERNAME}'""";
                         
                         CREATE OR REPLACE FUNCTION public."before_insert_instanceofFUN"()
                             RETURNS trigger
@@ -72,7 +72,7 @@ class InstanceOfDao:
                         TABLESPACE pg_default;
                         
                         ALTER TABLE public."subClass"
-                            OWNER to postgres;
+                            OWNER to """ f'{DB_USERNAME}'""";
                         
                         CREATE OR REPLACE FUNCTION public."before_insert_subclassFUN"()
                             RETURNS trigger

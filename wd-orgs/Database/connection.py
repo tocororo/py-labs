@@ -2,6 +2,8 @@ from logger_base import logger
 from psycopg2 import pool
 import sys
 
+DB_USERNAME = 'wdorgs'
+DB_PASSWORD = 'wdorgs'
 
 class Connection:
     __DATABASE = 'wdorgs'
