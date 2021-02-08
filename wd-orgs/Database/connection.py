@@ -4,11 +4,11 @@ import sys
 
 
 class Connection:
-    __DATABASE = 'wd-orgs'
-    __USERNAME = 'postgres'
-    __PASSWORD = 'admin'
+    __DATABASE = 'wdorgs'
+    __USERNAME = 'wdorgs'
+    __PASSWORD = 'wdorgs'
     __DB_PORT = '5432'
-    __HOST = '127.0.0.1'
+    __HOST = 'postgres.sceiba.cu'
     __MIN_CON = 1
     __MAX_CON = 5
     __pool = None
