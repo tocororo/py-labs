@@ -16,7 +16,7 @@ def collect(QID):
     sparqlInstanceOf = get_resultsInstanceOf(QID)
 
     # print(sparqlInstanceOf)
-    if len(sparqlInstanceOf["results"]["bindings"]) > 0:
+    if sparqlInstanceOf and len(sparqlInstanceOf["results"]["bindings"]) > 0:
         for sparqlI in sparqlInstanceOf["results"]["bindings"]:
             if "countryLabel" in sparqlI and sparqlI["countryLabel"]["value"] == "Cuba":
                 instanceCollect(sparqlI, QID)
@@ -28,7 +28,7 @@ def collect(QID):
     time.sleep(sleep_time)
     sparqlSubClass = get_resultsSubClass(QID)
 
-    if len(sparqlSubClass["results"]["bindings"]) > 0:
+    if sparqlSubClass and len(sparqlSubClass["results"]["bindings"]) > 0:
         for sparqlS in sparqlSubClass["results"]["bindings"]:
             _QID = sparqlS["item"]["value"].split('/')
             if not any(_QID[len(_QID) - 1] == postgres.getQID() for postgres in postgresSubClass):
