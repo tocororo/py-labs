@@ -4,6 +4,7 @@ import sys
 
 DB_USERNAME = 'wdorgs'
 DB_PASSWORD = 'wdorgs'
+#__HOST = 'postgres.sceiba.cu'
 
 class Connection:
     __DATABASE = 'wdorgs'

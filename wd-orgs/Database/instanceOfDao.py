@@ -1,6 +1,7 @@
 from Class.instanceOf import InstanceOf
 from Database.cursorPool import CursorPool
 from logger_base import logger
+import json
 
 from .connection import DB_USERNAME
 class InstanceOfDao:
@@ -12,27 +13,8 @@ class InstanceOfDao:
                             qid character varying COLLATE pg_catalog."default" NOT NULL,
                             label character varying COLLATE pg_catalog."default",
                             "itemDescription" character varying COLLATE pg_catalog."default",
-                            "instanceOf" character varying COLLATE pg_catalog."default",
-                            "instanceOfLabel" character varying COLLATE pg_catalog."default",
-                            image character varying COLLATE pg_catalog."default",
-                            inception character varying COLLATE pg_catalog."default",
-                            "nativeLabel" character varying COLLATE pg_catalog."default",
-                            "foundedBy" character varying COLLATE pg_catalog."default",
-                            "foundedByLabel" character varying COLLATE pg_catalog."default",
-                            country character varying COLLATE pg_catalog."default",
-                            "countryLabel" character varying COLLATE pg_catalog."default",
-                            state character varying COLLATE pg_catalog."default",
-                            "stateLabel" character varying COLLATE pg_catalog."default",
-                            region character varying COLLATE pg_catalog."default",
-                            "regionLabel" character varying COLLATE pg_catalog."default",
-                            "headquartersLocation" character varying COLLATE pg_catalog."default",
-                            "numEmployees" character varying COLLATE pg_catalog."default",
-                            "officialWebsite" character varying COLLATE pg_catalog."default",
-                            "officialWebsiteLabel" character varying COLLATE pg_catalog."default",
-                            "ISNI" character varying COLLATE pg_catalog."default",
-                            "GRID" character varying COLLATE pg_catalog."default",
-                            "quoraTopicID" character varying COLLATE pg_catalog."default",
-                            "twitterUsername" character varying COLLATE pg_catalog."default",
+                            "itemAlias" character varying COLLATE pg_catalog."default",
+                            "statements" jsonb COLLATE pg_catalog."default",
                             CONSTRAINT "instanceOf_pkey" PRIMARY KEY (qid)
                         )
                         
@@ -97,24 +79,11 @@ class InstanceOfDao:
 
     __CREATE_COPY_INSTANCEOF = 'CREATE TABLE IF NOT EXISTS public."instanceOfCopy" AS SELECT * FROM "instanceOf";'
     __SELECT = 'SELECT * FROM public."instanceOf";'
-    __INSERT = 'INSERT INTO public."instanceOf"(qid, label, "instanceOf") VALUES(%s,%s,%s);'
-    # __UPDATE = """UPDATE public."instanceOf" SET "itemDescription"=%s,
-    #               "instanceOf"=( CONCAT("instanceOf", ' / ', %s)),
-    #               "instanceOfLabel"=( CONCAT("instanceOfLabel", ' / ', %s)),
-    #               image=%s, inception=%s, "nativeLabel"=%s, "foundedBy"=%s, "foundedByLabel"=%s, country=%s, "countryLabel"=%s, state=%s, "stateLabel"=%s, region=%s, "regionLabel"=%s, "headquartersLocation"=%s, "numEmployees"=%s, "officialWebsite"=%s, "officialWebsiteLabel"=%s, "ISNI"=%s, "GRID"=%s, "quoraTopicID"=%s, "twitterUsername"=%s
-    #              WHERE qid=%s; """
-    #
-    # __UPDATE_COPY = """UPDATE public."instanceOfCopy" SET "itemDescription"=%s,
-    #                   "instanceOf"=( CONCAT("instanceOf", ' / ', %s)),
-    #                   "instanceOfLabel"=( CONCAT("instanceOfLabel", ' / ', %s)),
-    #                   image=%s, inception=%s, "nativeLabel"=%s, "foundedBy"=%s, "foundedByLabel"=%s, country=%s, "countryLabel"=%s, state=%s, "stateLabel"=%s, region=%s, "regionLabel"=%s, "headquartersLocation"=%s, "numEmployees"=%s, "officialWebsite"=%s, "officialWebsiteLabel"=%s, "ISNI"=%s, "GRID"=%s, "quoraTopicID"=%s, "twitterUsername"=%s
-    #                 WHERE qid=%s; """
-    __UPDATE = """UPDATE public."instanceOf" SET "itemDescription"=%s, "instanceOfLabel"=%s, image=%s, inception=%s, "nativeLabel"=%s, "foundedBy"=%s, "foundedByLabel"=%s, country=%s, "countryLabel"=%s, state=%s, "stateLabel"=%s, region=%s, "regionLabel"=%s, "headquartersLocation"=%s, "numEmployees"=%s, "officialWebsite"=%s, "officialWebsiteLabel"=%s, "ISNI"=%s, "GRID"=%s, "quoraTopicID"=%s, "twitterUsername"=%s
-                       WHERE qid=%s and "instanceOfLabel" IS null """
-    __UPDATE_COPY = """UPDATE public."instanceOfCopy" SET "itemDescription"=%s, "instanceOfLabel"=%s, image=%s, inception=%s, "nativeLabel"=%s, "foundedBy"=%s, "foundedByLabel"=%s, country=%s, "countryLabel"=%s, state=%s, "stateLabel"=%s, region=%s, "regionLabel"=%s, "headquartersLocation"=%s, "numEmployees"=%s, "officialWebsite"=%s, "officialWebsiteLabel"=%s, "ISNI"=%s, "GRID"=%s, "quoraTopicID"=%s, "twitterUsername"=%s
-                          WHERE qid=%s and "instanceOfLabel" IS null """
-    __UPDATE_FIELDS_INSTANCES_TO_NULL = """UPDATE public."instanceOf" SET "instanceOf"=NULL, "instanceOfLabel"=NULL;"""
-    __UPDATE_COPY_FIELDS_INSTANCES_TO_NULL = """UPDATE public."instanceOfCopy" SET "instanceOf"=NULL, "instanceOfLabel"=NULL;"""
+    __INSERT = 'INSERT INTO public."instanceOf"(qid, label) VALUES(%s,%s);'
+    __UPDATE = """ UPDATE public."instanceOf" SET "itemDescription"=%s, "itemAlias"=%s, statements = %s
+                WHERE qid = %s;"""
+    __UPDATE_COPY = """UPDATE public."instanceOfCopy" SET statements = %s
+                WHERE qid = %s;"""
     __DROP_TABLES = """DROP TABLE IF EXISTS public."subClass", public."instanceOf", public."instanceOfCopy" CASCADE;"""
     __DROP_FUNCTIONS = """DROP FUNCTiON IF EXISTS public."before_insert_instanceofFUN"(), public."before_insert_subclassFUN"() CASCADE;"""
     __GENERATE_JSON = 'SELECT array_to_json(array_agg(row_to_json(u))) FROM public."instanceOf" u;'
@@ -181,7 +150,7 @@ class InstanceOfDao:
             results = cursor.fetchall()
             instances = []
             for result in results:
-                instance = InstanceOf(result[0], result[1], result[2])
+                instance = InstanceOf(result[0], result[1])
                 instances.append(instance)
             return instances
 
@@ -190,22 +159,8 @@ class InstanceOfDao:
         with CursorPool() as cursor:
             logger.debug(cursor.mogrify(cls.__INSERT))
             logger.debug(f'instance to insert: {instance}')
-            values = (instance.getQID(), instance.getItemLabel(), instance.getInstanceOf())
+            values = (instance.getQID(), instance.getItemLabel())
             cursor.execute(cls.__INSERT, values)
-            return cursor.rowcount
-
-    @classmethod
-    def updateFieldsInstancesToNull(cls):
-        with CursorPool() as cursor:
-            logger.debug(cursor.mogrify(cls.__UPDATE_FIELDS_INSTANCES_TO_NULL))
-            cursor.execute(cls.__UPDATE_FIELDS_INSTANCES_TO_NULL)
-            return cursor.rowcount
-
-    @classmethod
-    def updateCopyFieldsInstancesToNull(cls):
-        with CursorPool() as cursor:
-            logger.debug(cursor.mogrify(cls.__UPDATE_COPY_FIELDS_INSTANCES_TO_NULL))
-            cursor.execute(cls.__UPDATE_COPY_FIELDS_INSTANCES_TO_NULL)
             return cursor.rowcount
 
     @classmethod
@@ -213,15 +168,7 @@ class InstanceOfDao:
         with CursorPool() as cursor:
             logger.debug(cursor.mogrify(cls.__UPDATE))
             logger.debug(f'instance to update: {instance.getQID()}')
-            values = (instance.getDescription(), instance.getInstanceOfLabel(),
-                      instance.getInstanceOfLabel(), instance.getImage(),
-                      instance.getInception(), instance.getNativeLabel(), instance.getFoundedBy(),
-                      instance.getFoundedByLabel(), instance.getCountry(), instance.getCountryLabel(),
-                      instance.getState(), instance.getStateLabel(), instance.getRegion(),
-                      instance.getRegionLabel(), instance.getHeadquartersLocation(),
-                      instance.getNumEmployees(), instance.getOfficialWebsite(),
-                      instance.getOfficialWebsiteLabel(), instance.getISNI(), instance.getGRID(),
-                      instance.getQuoraTopicID(), instance.getTwitterUsername(), instance.getQID())
+            values = (instance.getDescription(), instance.getAlias(), json.dumps(instance.getJsonb()), instance.getQID())
             cursor.execute(cls.__UPDATE, values)
             return cursor.rowcount
 
@@ -230,16 +177,8 @@ class InstanceOfDao:
         with CursorPool() as cursor:
             logger.debug(cursor.mogrify(cls.__UPDATE_COPY))
             logger.debug(f'instance to update: {instance.getQID()}')
-            values = (instance.getDescription(),
-                      instance.getInstanceOfLabel(), instance.getImage(),
-                      instance.getInception(), instance.getNativeLabel(), instance.getFoundedBy(),
-                      instance.getFoundedByLabel(), instance.getCountry(), instance.getCountryLabel(),
-                      instance.getState(), instance.getStateLabel(), instance.getRegion(),
-                      instance.getRegionLabel(), instance.getHeadquartersLocation(),
-                      instance.getNumEmployees(), instance.getOfficialWebsite(),
-                      instance.getOfficialWebsiteLabel(), instance.getISNI(), instance.getGRID(),
-                      instance.getQuoraTopicID(), instance.getTwitterUsername(), instance.getQID())
-            cursor.execute(cls.__UPDATE, values)
+            values = (instance.getDescription(), instance.getAlias(), instance.getJsonb(), instance.getQID())
+            cursor.execute(cls.__UPDATE_COPY, values)
             return cursor.rowcount
 
 

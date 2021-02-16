@@ -23,11 +23,9 @@ while value != '6':
         _class = input(str('Provea un id de clase de wikidata: '))
         collect(_class)
     elif value == '3':
-        # InstanceOfDao.updateFieldsInstancesToNull()
         getDataInstance('original')
     elif value == '4':
         InstanceOfDao.createInstanceCopy()
-        # InstanceOfDao.updateCopyFieldsInstancesToNull()
         getDataInstance('copy')
     elif value == '5':
         InstanceOfDao.dropTables()
