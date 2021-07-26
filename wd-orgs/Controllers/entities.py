@@ -1,13 +1,12 @@
 import json
 
-from Class.instanceOf import InstanceOf
+from Class.entities import Entities
+from Database.connection import DB_USERNAME
 from Database.cursorPool import CursorPool
 from logger_base import logger
 
-from .connection import DB_USERNAME
 
-
-class InstanceOfDao:
+class Entities:
     '''
     DAO (Data Access Object) 
     CRUD: Create-Read-Update-Delete entidad instance
@@ -122,7 +121,7 @@ class InstanceOfDao:
             return cursor.rowcount
 
     @classmethod
-    def createTableInstance(cls):
+    def createTableEntities(cls):
         with CursorPool() as cursor:
             logger.debug(cursor.mogrify(cls.__CREATE_INSTANCE))
             cursor.execute(cls.__CREATE_INSTANCE)
@@ -143,7 +142,7 @@ class InstanceOfDao:
             return cursor.rowcount
 
     @classmethod
-    def createInstanceCopy(cls):
+    def createEntitiesCopy(cls):
         with CursorPool() as cursor:
             logger.debug(cursor.mogrify(cls.__CREATE_COPY_INSTANCEOF))
             cursor.execute(cls.__CREATE_COPY_INSTANCEOF)
@@ -157,7 +156,7 @@ class InstanceOfDao:
             results = cursor.fetchall()
             instances = []
             for result in results:
-                instance = InstanceOf(result[0], result[1])
+                instance = Entities(result[0], result[1])
                 instances.append(instance)
             return instances
 
@@ -176,7 +175,7 @@ class InstanceOfDao:
             logger.debug(cursor.mogrify(cls.__UPDATE))
             logger.debug(f'instance to update: {instance.getQID()}')
             values = (
-            instance.getDescription(), instance.getAlias(), json.dumps(instance.getJsonb()), instance.getQID())
+                instance.getDescription(), instance.getAlias(), json.dumps(instance.getJsonb()), instance.getQID())
             cursor.execute(cls.__UPDATE, values)
             return cursor.rowcount
 
@@ -191,7 +190,7 @@ class InstanceOfDao:
 
 
 if __name__ == '__main__':
-    instances = InstanceOfDao.select()
+    instances = Entities.select()
     for instance in instances:
         logger.debug(instance)
         logger.debug(instance.getQID())

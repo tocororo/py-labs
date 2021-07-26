@@ -2,13 +2,14 @@
 # https://rdflib.github.io/sparqlwrapper/
 
 import sys
-from logger_base import logger
+
 from SPARQLWrapper import SPARQLWrapper, JSON
+from logger_base import logger
 
 endpoint_url = "https://query.wikidata.org/sparql"
 
 
-def get_resultsInstanceOf(QID):
+def getSparqlEntities(QID):
     try:
         # Q43229 - organization
         query = """SELECT DISTINCT ?item  ?itemLabel ?itemDescription
@@ -34,7 +35,8 @@ def get_resultsInstanceOf(QID):
         logger.debug(f'ERROR: {e}')
         return None
 
-def get_resultsSubClass(QID):
+
+def getSparqlOrganizations(QID):
     try:
         # Q43229 - organization
         query = """SELECT ?item ?itemLabel
@@ -55,8 +57,8 @@ def get_resultsSubClass(QID):
         logger.debug(f'ERROR: {e}')
         return None
 
-def get_infoInstace(itemLabel):
 
+def getEntitiesStatements(itemLabel):
     query = """SELECT ?_prop ?propLabel ?_prop_entity ?_prop_entityLabel
                 WHERE
                 {
@@ -74,7 +76,7 @@ def get_infoInstace(itemLabel):
     return sparql.query().convert()
 
 
-def get_description_alias(itemLabel):
+def getEntitiesDescription(itemLabel):
     try:
         # Q43229 - organization
         query = """SELECT DISTINCT ?item  ?itemLabel ?itemDescription ?itemAltLabel
@@ -97,16 +99,16 @@ def get_description_alias(itemLabel):
 
 
 if __name__ == '__main__':
-    resultsSubClass = get_infoInstace('Q43229')
-    for result in resultsSubClass["results"]["bindings"]:
+    resultsOrganizations = getEntitiesStatements('Q43229')
+    for result in resultsOrganizations["results"]["bindings"]:
         print(result)
 
-# resultsSubClass = get_resultsSubClass('Q43229')
-# for result in resultsSubClass["results"]["bindings"]:
-#     # subClass = SubClass(result.item.value)
+# resultsOrganizations = getSparqlOrganizations('Q43229')
+# for result in resultsOrganizations["results"]["bindings"]:
+#     # subClass = Organizations(result.item.value)
 #     print(result)
 
-# resultsInstanceOf = get_resultsInstanceOf('Q43229')
-# for result in resultsInstanceOf["results"]["bindings"]:
-#     # subClass = SubClass(result.item.value)
+# resultsEntities = getSparqlEntities('Q43229')
+# for result in resultsEntities["results"]["bindings"]:
+#     # subClass = Organizations(result.item.value)
 #     print(result)

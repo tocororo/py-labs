@@ -1,19 +1,19 @@
 import uvicorn
-from fastapi import FastAPI
+from fastapi import FastAPI, Form
 
-from Database.instanceOfDao import InstanceOfDao
+from Controllers.entities import Entities
 
 app = FastAPI()
 
 
 @app.get("/entities")
 async def getEntities():
-    data = await InstanceOfDao.createJson()
+    data = await Entities.createJson()
     return data
 
 
 @app.post("/collect/")
-async def startCollect(org: str):
+async def startCollect(org: str = Form(...)):
     # await collect(org)
     return org
 

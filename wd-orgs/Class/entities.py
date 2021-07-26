@@ -1,9 +1,8 @@
 from logger_base import logger
 
 
-class InstanceOf:
+class Entities:
     def __init__(self, QID=None, label=None, description=None, alias=None, jsonb=None):
-
         self.__QID = QID
         self.__label = label
         self.__description = description
@@ -34,13 +33,13 @@ class InstanceOf:
 
     def setDescription(self, description):
         self.__description = description
-        
+
     def getAlias(self):
         return self.__alias
 
     def setAlias(self, alias):
         self.__alias = alias
-        
+
     def getJsonb(self):
         return self.__jsonb
 
@@ -49,5 +48,5 @@ class InstanceOf:
 
 
 if __name__ == '__main__':
-    instance = InstanceOf(QID='Q4564', label='Gomez')
+    instance = Entities(QID='Q4564', label='Gomez')
     logger.debug(instance)

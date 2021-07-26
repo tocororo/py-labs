@@ -1,9 +1,9 @@
-from Class.subClass import SubClass
+from Class.organizations import Organizations
 from Database.cursorPool import CursorPool
 from logger_base import logger
 
 
-class SubClassDao:
+class Organizations:
     '''
     DAO (Data Access Object) 
     CRUD: Create-Read-Update-Delete entidad subClass
@@ -19,7 +19,7 @@ class SubClassDao:
             results = cursor.fetchall()
             subClasses = []
             for result in results:
-                subClass = SubClass(result[0], result[1])
+                subClass = Organizations(result[0], result[1])
                 subClasses.append(subClass)
             return subClasses
 
@@ -34,13 +34,13 @@ class SubClassDao:
 
 
 if __name__ == '__main__':
-    subClasses = SubClassDao.select()
+    subClasses = Organizations.select()
     print(subClasses)
     for subClass in subClasses:
         logger.debug(subClass)
         logger.debug(subClass.getQID())
 
     # Insertamos un nuevo registro
-    # subClass = SubClass(QID='Q525', label='Najera', id_subClass='Q566')
-    # inserted_instances = InstanceOfDao.insert(subClass)
+    # subClass = Organizations(QID='Q525', label='Najera', id_subClass='Q566')
+    # inserted_instances = Entities.insert(subClass)
     # logger.debug(f'Inserted persons: {inserted_instances}')
