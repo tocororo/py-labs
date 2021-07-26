@@ -1,9 +1,12 @@
+import json
+
 from Class.instanceOf import InstanceOf
 from Database.cursorPool import CursorPool
 from logger_base import logger
-import json
 
 from .connection import DB_USERNAME
+
+
 class InstanceOfDao:
     '''
     DAO (Data Access Object) 
@@ -89,23 +92,27 @@ class InstanceOfDao:
     __GENERATE_JSON = 'SELECT array_to_json(array_agg(row_to_json(u))) FROM public."instanceOf" u;'
 
     @classmethod
-    def generateJSON(cls):
+    def createJson(cls):
         with CursorPool() as cursor:
             logger.debug(cursor.mogrify(cls.__GENERATE_JSON))
             cursor.execute(cls.__GENERATE_JSON)
             result = cursor.fetchone()
             result = str(result).replace("(", "")
             result = str(result).replace(")", "")
-            print(result)
-            try:
-                archivo = open("wd-orgs.json", "w")
-                archivo.write(result)
-                logger.info('Archive wd-orgs.json created successfully')
-            except Exception as e:
-                logger.error(f'Ups failed to create wd-orgs.json archive {e}')
-            finally:
-                archivo.close()
             return result
+
+    @classmethod
+    def generateJSON(cls):
+        result = cls.createJson()
+        try:
+            archivo = open("wd-orgs.json", "w")
+            archivo.write(result)
+            logger.info('Archive wd-orgs.json created successfully')
+        except Exception as e:
+            logger.error(f'Ups failed to create wd-orgs.json archive {e}')
+        finally:
+            archivo.close()
+        return result
 
     @classmethod
     def createTableSubclass(cls):
@@ -168,7 +175,8 @@ class InstanceOfDao:
         with CursorPool() as cursor:
             logger.debug(cursor.mogrify(cls.__UPDATE))
             logger.debug(f'instance to update: {instance.getQID()}')
-            values = (instance.getDescription(), instance.getAlias(), json.dumps(instance.getJsonb()), instance.getQID())
+            values = (
+            instance.getDescription(), instance.getAlias(), json.dumps(instance.getJsonb()), instance.getQID())
             cursor.execute(cls.__UPDATE, values)
             return cursor.rowcount
 

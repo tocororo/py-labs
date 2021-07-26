@@ -1,39 +1,22 @@
-#!/usr/bin/env python
-from DataCollect import collect, getDataInstance
+import uvicorn
+from fastapi import FastAPI
+
 from Database.instanceOfDao import InstanceOfDao
-import sys
+
+app = FastAPI()
 
 
-value = ''
-# Q43229
-while value != '6':
-    value = input(str(""" 
-    1 - Crear tablas instanceOf y subClass
-    2 - Obtener instancias y subclases de wikidata. 
-    3 - Actualizar informacion sobre instancias.
-    4 - Crear copia de instancias y actualizar informacion en ella.
-    5 - Eliminar tablas
-    6 - Generar JSON instanceOf
-    7 - Salir.
-    Elija una opcion del 1-7: """))
-    if value == '1':
-        InstanceOfDao.createTableInstance()
-        InstanceOfDao.createTableSubclass()
-    elif value == '2':
-        _class = input(str('Provea un id de clase de wikidata: '))
-        collect(_class)
-    elif value == '3':
-        getDataInstance('original')
-    elif value == '4':
-        InstanceOfDao.createInstanceCopy()
-        getDataInstance('copy')
-    elif value == '5':
-        InstanceOfDao.dropTables()
-        InstanceOfDao.dropFunctions()
-    elif value == '6':
-        InstanceOfDao.generateJSON()
-    elif value == '7':
-        sys.exit()
+@app.get("/entities")
+async def getEntities():
+    data = await InstanceOfDao.createJson()
+    return data
+
+
+@app.post("/collect/")
+async def startCollect(org: str):
+    # await collect(org)
+    return org
+
 
 if __name__ == '__main__':
-    ...
+    uvicorn.run("main:app", host="0.0.0.0", port=4000)
