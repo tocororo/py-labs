@@ -1,17 +1,20 @@
+import sys
+
 from logger_base import logger
 from psycopg2 import pool
-import sys
 
 DB_USERNAME = 'wdorgs'
 DB_PASSWORD = 'wdorgs'
-#__HOST = 'postgres.sceiba.cu'
+
+
+# __HOST = 'postgres.sceiba.cu'
 
 class Connection:
     __DATABASE = 'wdorgs'
     __USERNAME = 'wdorgs'
     __PASSWORD = 'wdorgs'
     __DB_PORT = '5432'
-    __HOST = 'postgres.sceiba.cu'
+    __HOST = 'localhost'
     __MIN_CON = 1
     __MAX_CON = 5
     __pool = None
