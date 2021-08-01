@@ -121,7 +121,7 @@ class Entities:
             return cursor.rowcount
 
     @classmethod
-    def createTableEntities(cls):
+    def createTableOrganizations(cls):
         with CursorPool() as cursor:
             logger.debug(cursor.mogrify(cls.__CREATE_INSTANCE))
             cursor.execute(cls.__CREATE_INSTANCE)

@@ -15,7 +15,7 @@ async def getEntities():
 
 @app.post("/collect/")
 async def startCollect(org: str = Form(...)):
-    await Entities.createTableInstance()
+    await Entities.createTableEntities()
     await Entities.createTableOrganizations()
     await collect(org)
     await getDataInstance('original')
