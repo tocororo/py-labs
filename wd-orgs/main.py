@@ -1,6 +1,7 @@
 import uvicorn
 from fastapi import FastAPI, Form
 
+from Controllers.dataCollect import collect, getDataInstance
 from Controllers.entities import Entities
 
 app = FastAPI()
@@ -14,7 +15,10 @@ async def getEntities():
 
 @app.post("/collect/")
 async def startCollect(org: str = Form(...)):
-    # await collect(org)
+    await Entities.createTableInstance()
+    await Entities.createTableOrganizations()
+    await collect(org)
+    await getDataInstance('original')
     return org
 
 
