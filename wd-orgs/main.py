@@ -2,21 +2,21 @@ import uvicorn
 from fastapi import FastAPI, Form
 
 from Controllers.dataCollect import collect, getDataInstance
-from Controllers.entities import Entities
+from Controllers.instance import Instance
 
 app = FastAPI()
 
 
 @app.get("/entities")
 async def getEntities():
-    data = await Entities.createJson()
+    data = await Instance.createJson()
     return data
 
 
 @app.post("/collect/")
 async def startCollect(org: str = Form(...)):
-    await Entities.createTableEntities()
-    await Entities.createTableOrganizations()
+    await Instance.createTableInstance()
+    await Instance.createTableSubclass()
     await collect(org)
     await getDataInstance('original')
     return org

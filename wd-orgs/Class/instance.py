@@ -1,7 +1,7 @@
 from logger_base import logger
 
 
-class Entities:
+class Instance:
     def __init__(self, QID=None, label=None, description=None, alias=None, jsonb=None):
         self.__QID = QID
         self.__label = label
@@ -48,5 +48,5 @@ class Entities:
 
 
 if __name__ == '__main__':
-    instance = Entities(QID='Q4564', label='Gomez')
+    instance = Instance(QID='Q4564', label='Gomez')
     logger.debug(instance)

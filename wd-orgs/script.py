@@ -2,7 +2,7 @@
 import sys
 
 from Controllers.dataCollect import collect, getDataInstance
-from Controllers.entities import Entities
+from Controllers.instance import Instance
 
 value = ''
 # Q43229
@@ -17,21 +17,21 @@ while value != '6':
     7 - Salir.
     Elija una opcion del 1-7: """))
     if value == '1':
-        Entities.createTableInstance()
-        Entities.createTableOrganizations()
+        Instance.createTableInstance()
+        Instance.createTableSublass()
     elif value == '2':
         _class = input(str('Provea un id de clase de wikidata: '))
         collect(_class)
     elif value == '3':
         getDataInstance('original')
     elif value == '4':
-        Entities.createEntitiesCopy()
+        Instance.createInstancesCopy()
         getDataInstance('copy')
     elif value == '5':
-        Entities.dropTables()
-        Entities.dropFunctions()
+        Instance.dropTables()
+        Instance.dropFunctions()
     elif value == '6':
-        Entities.generateJSON()
+        Instance.generateJSON()
     elif value == '7':
         sys.exit()
 

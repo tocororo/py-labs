@@ -1,12 +1,12 @@
 import json
 
-from Class.entities import Entities
+from Class.instance import Instance
 from Database.connection import DB_USERNAME
 from Database.cursorPool import CursorPool
 from logger_base import logger
 
 
-class Entities:
+class Instance:
     '''
     DAO (Data Access Object) 
     CRUD: Create-Read-Update-Delete entidad instance
@@ -121,7 +121,7 @@ class Entities:
             return cursor.rowcount
 
     @classmethod
-    def createTableOrganizations(cls):
+    def createTableInstance(cls):
         with CursorPool() as cursor:
             logger.debug(cursor.mogrify(cls.__CREATE_INSTANCE))
             cursor.execute(cls.__CREATE_INSTANCE)
@@ -142,7 +142,7 @@ class Entities:
             return cursor.rowcount
 
     @classmethod
-    def createEntitiesCopy(cls):
+    def createInstanceCopy(cls):
         with CursorPool() as cursor:
             logger.debug(cursor.mogrify(cls.__CREATE_COPY_INSTANCEOF))
             cursor.execute(cls.__CREATE_COPY_INSTANCEOF)
@@ -156,7 +156,7 @@ class Entities:
             results = cursor.fetchall()
             instances = []
             for result in results:
-                instance = Entities(result[0], result[1])
+                instance = Instance(result[0], result[1])
                 instances.append(instance)
             return instances
 
@@ -190,7 +190,7 @@ class Entities:
 
 
 if __name__ == '__main__':
-    instances = Entities.select()
+    instances = Instance.select()
     for instance in instances:
         logger.debug(instance)
         logger.debug(instance.getQID())
