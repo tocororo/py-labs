@@ -17,6 +17,11 @@ class Instance:
                             "itemDescription" character varying COLLATE pg_catalog."default",
                             "itemAlias" character varying COLLATE pg_catalog."default",
                             "statements" jsonb COLLATE pg_catalog."default",
+                            "firstImport" date COLLATE pg_catalog."default" NOT NULL,
+                            "lastImport" date COLLATE pg_catalog."default" NOT NULL,
+                            "firstUserInImport" character varying COLLATE pg_catalog."default" NOT NULL,
+                            "lastUserImport" character varying COLLATE pg_catalog."default" NOT NULL,
+                            "state" character varying COLLATE pg_catalog."default NOT NULL,
                             CONSTRAINT "instanceOf_pkey" PRIMARY KEY (qid)
                         )
                         
@@ -175,7 +180,7 @@ class Instance:
             logger.debug(cursor.mogrify(cls.__UPDATE))
             logger.debug(f'instance to update: {instance.getQID()}')
             values = (
-                instance.getDescription(), instance.getAlias(), json.dumps(instance.getJsonb()), instance.getQID())
+                instance.getDescription(), instance.getAlias(), json.dumps(instance.getStatements()), instance.getQID())
             cursor.execute(cls.__UPDATE, values)
             return cursor.rowcount
 
@@ -184,7 +189,7 @@ class Instance:
         with CursorPool() as cursor:
             logger.debug(cursor.mogrify(cls.__UPDATE_COPY))
             logger.debug(f'instance to update: {instance.getQID()}')
-            values = (instance.getDescription(), instance.getAlias(), instance.getJsonb(), instance.getQID())
+            values = (instance.getDescription(), instance.getAlias(), instance.getStatements(), instance.getQID())
             cursor.execute(cls.__UPDATE_COPY, values)
             return cursor.rowcount
 
