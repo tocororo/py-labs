@@ -1,10 +1,25 @@
 import time
+from enum import Enum
 from random import randint
 
 from Controllers.instance import Instance
 from Controllers.subclass import Subclass
 from Database.SPARQL import getSparqlSubclass, getSparqlInstance, getInstanceStatements, getInstanceDescription
 from logger_base import logger
+
+
+class States(Enum):
+    existente = 'Existente'
+    noExistente = 'NoExistente'
+    conSemejantes = 'ConSemejantes'
+    sinSemejantes = 'SinSemejantes'
+    desambiguada = 'Desambiguada'
+    noDesambiguada = 'NoDesambiguada'
+    coincidencias = 'Coincidencias'
+    noCoincidencias = 'NoCoincidencias'
+    combinada = 'Combinada'
+    conflictoAlCombinar = 'ConflictoAlCombinar'
+    noCombinada = 'NoCombinada'
 
 
 # Q43229
