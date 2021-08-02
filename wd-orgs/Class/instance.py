@@ -2,12 +2,18 @@ from logger_base import logger
 
 
 class Instance:
-    def __init__(self, QID=None, label=None, description=None, alias=None, jsonb=None):
+    def __init__(self, QID=None, label=None, description=None, alias=None, statements=None, firstImport=None,
+                 lastImport=None, firstUserInImport=None, lastUserImport=None, state=None):
         self.__QID = QID
         self.__label = label
         self.__description = description
         self.__alias = alias
-        self.__jsonb = jsonb
+        self.__statements = statements
+        self.__firstImport = firstImport
+        self.__lastImport = lastImport
+        self.__firstUserInImport = firstUserInImport
+        self.__lastUserImport = lastUserImport
+        self.__state = state
 
     def __str__(self):
         return (
@@ -40,11 +46,41 @@ class Instance:
     def setAlias(self, alias):
         self.__alias = alias
 
-    def getJsonb(self):
-        return self.__jsonb
+    def getStatements(self):
+        return self.__statements
 
-    def setJsonb(self, jsonb):
-        self.__jsonb = jsonb
+    def setStatements(self, statements):
+        self.__statements = statements
+
+    def getFirstImport(self):
+        return self.__firstImport
+
+    def setFirstImport(self, firstImport):
+        self.__firstImport = firstImport
+
+    def getLastImport(self):
+        return self.__lastImport
+
+    def setLastImport(self, lastImport):
+        self.__lastImport = lastImport
+
+    def getFirstUserInImport(self):
+        return self.__firstUserInImport
+
+    def setFirstUserInImport(self, firstUserInImport):
+        self.__firstUserInImport = firstUserInImport
+
+    def getLastUserImport(self):
+        return self.__lastUserImport
+
+    def setLastUserImport(self, lastUserImport):
+        self.__lastUserImport = lastUserImport
+
+    def getState(self):
+        return self.__state
+
+    def setState(self, state):
+        self.__state = state
 
 
 if __name__ == '__main__':
