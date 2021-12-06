@@ -105,18 +105,15 @@ def get_article_download_dspace(dictionary, dir, id):
     os.makedirs(dir_create, exist_ok=True)
     for key in dictionary:
         response = requests.get(dictionary[key], verify = False, timeout = timeout)
-        print(response.headers['Content-Type'])
+        print('-------------',response.headers['Content-Type'])
+        print(response.headers['Content-Disposition'])
+        allowed = ['application/pdf', 'text/html']
         if(response.text != ''):
-            if(response.headers['Content-Type'] == 'application/pdf'):
-                filename = id + '_' + str(cont)
-                export_file = open(dir_open + filename, 'wb')
-                export_file.write(response.content)
-                export_file.close()      
-            if(response.headers['Content-Type'] == 'text/html'):
-                filename = id + '_' + str(cont)
-                export_file = open(dir_open + filename, 'wb')
-                export_file.write(response.content)
-                export_file.close()
+            # if(response.headers['Content-Type'] in allowed):
+            filename = id + '_' + str(cont)
+            export_file = open(dir_open + filename, 'wb')
+            export_file.write(response.content)
+            export_file.close()
         cont = cont+1
     return 'ok'
 
@@ -125,9 +122,17 @@ def get_article_download_dspace(dictionary, dir, id):
 
 
 
-url = 'https://rc.upr.edu.cu/jspui/handle/DICT/2788'
-id = '2788'
-direccion =  '/home/reinier/Trabajo/Proyectos/Collection DSPACE/'
+url_ojs = 'https://mendive.upr.edu.cu/index.php/MendiveUPR/article/view/2513'
+id = '2513'
+direccion =  'data/'
+res = get_urls_download_ojs(url_ojs)
+get_article_download_ojs(res, direccion, id)
+
+url_dspace = 'https://rc.upr.edu.cu/handle/DICT/3494'
+id_d = '1720'
+res2 = get_urls_download_dspace(url_dspace)
+get_article_download_dspace(res2, direccion, id_d)
+
 #article_diccionario_ojs = get_urls_download_ojs(url)
 #article_diccionario_dspace = get_urls_download_dspace(url)
 #article_ojs = get_article_download_ojs(get_urls_download_ojs(url),direccion,id)
