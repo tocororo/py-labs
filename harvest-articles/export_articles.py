@@ -39,6 +39,7 @@ def get_urls_download_ojs(url):
 def get_article_download_ojs(dictionary, dir, id):
     timeout = 30
     dir_create = dir + id
+    ext = ''
     dir_open = dir_create + '/'
     os.makedirs(dir_create, exist_ok=True)
     for key in dictionary:
@@ -46,7 +47,8 @@ def get_article_download_ojs(dictionary, dir, id):
         print(response.headers['Content-Type'])
         if(response.text != ''):
             if(response.headers['Content-Type'] == 'application/pdf'):
-                filename = key
+                ext = '.pdf'
+                filename = key + ext
                 if(response.headers['Content-Disposition']):
                     content_disposition = response.headers['Content-Disposition']
                     indice_1 = content_disposition.index('"') #obtenemos la posición del primer carácter "
@@ -56,7 +58,8 @@ def get_article_download_ojs(dictionary, dir, id):
                 export_file.write(response.content)
                 export_file.close()      
             if(response.headers['Content-Type'] == 'text/html'):
-                filename = key
+                ext = '.html'
+                filename = key + ext
                 if(response.headers['Content-Disposition']):
                     content_disposition = response.headers['Content-Disposition']
                     indice_1 = content_disposition.index('"') #obtenemos la posición del primer carácter "
@@ -105,12 +108,25 @@ def get_article_download_dspace(dictionary, dir, id):
     os.makedirs(dir_create, exist_ok=True)
     for key in dictionary:
         response = requests.get(dictionary[key], verify = False, timeout = timeout)
-        print('-------------',response.headers['Content-Type'])
-        print(response.headers['Content-Disposition'])
+        #print('-------------',dictionary[key])
+        #print(urllib.parse.urlparse(dictionary[key]))
+        #print(response.headers)
         allowed = ['application/pdf', 'text/html']
         if(response.text != ''):
-            # if(response.headers['Content-Type'] in allowed):
-            filename = id + '_' + str(cont)
+            if('Content-Disposition' in response.headers):
+                content_disposition = response.headers['Content-Disposition']
+                indice_1 = content_disposition.index('"') #obtenemos la posición del primer carácter "
+                indice_2 = content_disposition.rfind('"') #obtenemos la posición del ultimo carácter "
+                filename = content_disposition[indice_1 + 1:indice_2]
+            else:
+                #url_part = urllib.parse.urlparse(dictionary[key]).path
+                #url_filename = url_part.replace("%20"," ")
+                url_filename = "'" + dictionary[key] + "'"
+                print(url_filename)
+                indice_1 = url_filename.rfind('/') #obtenemos la posición del primer carácter "
+                indice_2 = url_filename.rfind("'") #obtenemos la posición del ultimo carácter "
+                filename = url_filename[indice_1 + 1 : indice_2]
+
             export_file = open(dir_open + filename, 'wb')
             export_file.write(response.content)
             export_file.close()
@@ -125,11 +141,11 @@ def get_article_download_dspace(dictionary, dir, id):
 url_ojs = 'https://mendive.upr.edu.cu/index.php/MendiveUPR/article/view/2513'
 id = '2513'
 direccion =  'data/'
-res = get_urls_download_ojs(url_ojs)
-get_article_download_ojs(res, direccion, id)
+#res = get_urls_download_ojs(url_ojs)
+#get_article_download_ojs(res, direccion, id)
 
-url_dspace = 'https://rc.upr.edu.cu/handle/DICT/3494'
-id_d = '1720'
+url_dspace = 'https://rc.upr.edu.cu/handle/DICT/2301'
+id_d = '2301'
 res2 = get_urls_download_dspace(url_dspace)
 get_article_download_dspace(res2, direccion, id_d)
 
