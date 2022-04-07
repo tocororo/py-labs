@@ -10,6 +10,6 @@
 while IFS="" read -r p || [ -n "$p" ]
 do
   printf '%s\n' "$p"
-  nohup iroko harvester fetch-url $p /home/malayo/dev/iroko/data/new &>/dev/null &
+  nohup iroko harvester fetch-url $p ../data/harvest &>/dev/null &
 
-done < /home/malayo/dev/iroko/data/urls
+done < ./urls
