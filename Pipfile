@@ -6,10 +6,19 @@ verify_ssl = true
 [dev-packages]
 
 [packages]
-psycopg2 = "*"
-sparqlwrapper = "*"
-lxml = "*"
-
+psycopg2 = "==2.7.7"
+sparqlwrapper = "==1.8.5"
+lxml = "==4.6.4"
+isodate = "==0.6.0"
+psycopg2-binary = "==2.8.5"
+pyparsing = "==2.4.7"
+rdflib = "==5.0.0"
+six = "==1.15.0"
+fastapi = "==0.67.0"
+uvicorn = {version = "==0.14.0", extras = ["standard"]}
+requests = "==2.26.0"
+sickle = "==0.7.0"
+click = ">=8.0"
 
 [requires]
 python_version = "3.6"

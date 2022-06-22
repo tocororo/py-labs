@@ -1,5 +1,6 @@
 import click
 from harvester.oai.harvester import fetch_list, fetch_list_async, fetch_url
+from harvester.orcid.orcid import get_orcid_list_by_org, ORCID_API
 
 
 @click.group()
@@ -30,3 +31,6 @@ def fetchasync(list_file, data_dir):
     fetch_list_async(list_file, data_dir)
 
 
+@harvester.command()
+def orcid():
+    get_orcid_list_by_org()
