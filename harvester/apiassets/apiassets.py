@@ -1,6 +1,7 @@
 import requests
 from random import randint
 import json
+from time import sleep
 
 dominio = 'http://apiassets.upr.edu.cu/'
 
@@ -26,6 +27,7 @@ def get_all_people():
     people = json.loads(response.text)
 
     while(people['hydra:nextPage']):
+        sleep(2)
         people_all[people['hydra:member'][0]['noCi']] = get_info_people(people['hydra:member'][0]['idExpediente'])
         print(people['hydra:member'][0]['noCi'])
         print(page)
@@ -34,6 +36,9 @@ def get_all_people():
         response = request_apiassets(url_new)
         people = json.loads(response.text)
 
+    json_string = json.dumps(people_all)
+    with open('apiassets.json', 'w') as outfile:
+        json.dump(json_string, outfile)
     return people_all
 
 
@@ -177,3 +182,7 @@ def get_profesion(id):
         profesiones = json_object['descProfesion']
 
     return str(profesiones)
+
+
+
+get_all_people()
