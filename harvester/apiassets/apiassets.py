@@ -1,3 +1,4 @@
+from itertools import count
 import requests
 from random import randint
 import json
@@ -19,21 +20,24 @@ def request_apiassets(url):
 
 
 def get_all_people():
-    itemsPerPage = 1
+    itemsPerPage = 500
     page = 1
     people_all = {}
     url = dominio + 'empleados_gras?_format=json&page=' + str(page) + '&itemsPerPage=' + str(itemsPerPage)
     response = request_apiassets(url)
     people = json.loads(response.text)
-
-    # while(people['hydra:nextPage']):
-    while(page <= 2):
+    
+    while('hydra:nextPage' in people.keys()):
+        cont = 0
         sleep(2)
-        people_all[people['hydra:member'][0]['noCi']] = get_info_people(people)
-        print(people['hydra:member'][0]['noCi'])
-        print(page)
+        while(len(people['hydra:member']) - 1 > cont):
+            people_all[people['hydra:member'][cont]['noCi']] = get_info_people(people['hydra:member'][cont])
+            cont = cont + 1
+            print(people['hydra:member'][cont]['noCi'])
+            print(cont)
         page = page + 1
         url_new = dominio + 'empleados_gras?_format=json&page=' + str(page) + '&itemsPerPage=' + str(itemsPerPage)
+        print(url_new)
         response = request_apiassets(url_new)
         people = json.loads(response.text)
 
@@ -45,16 +49,16 @@ def get_all_people():
 
 def get_info_people(people):
 
-    people['hydra:member'][0]['idCategoria'] = get_category(people['hydra:member'][0]['idCategoria'])
-    people['hydra:member'][0]['idCargo'] = get_cargo(people['hydra:member'][0]['idCargo'])
-    people['hydra:member'][0]['idCategoriaDi'] = get_categoryDi(people['hydra:member'][0]['idCategoriaDi'])
-    people['hydra:member'][0]['idGradoCientifico'] = get_gradocientifico(people['hydra:member'][0]['idGradoCientifico'])
-    people['hydra:member'][0]['idMunicipio'] = get_municipios(people['hydra:member'][0]['idMunicipio'])
-    people['hydra:member'][0]['idNivelEscolaridad'] = get_nivel_escolaridad(people['hydra:member'][0]['idNivelEscolaridad'])
-    people['hydra:member'][0]['idProfesion'] = get_profesion(people['hydra:member'][0]['idProfesion'])
-    people['hydra:member'][0]['idProvincia'] = get_provincias(people['hydra:member'][0]['idProvincia'])
+    people['idCategoria'] = get_category(people['idCategoria'])
+    people['idCargo'] = get_cargo(people['idCargo'])
+    people['idCategoriaDi'] = get_categoryDi(people['idCategoriaDi'])
+    people['idGradoCientifico'] = get_gradocientifico(people['idGradoCientifico'])
+    people['idMunicipio'] = get_municipios(people['idMunicipio'])
+    people['idNivelEscolaridad'] = get_nivel_escolaridad(people['idNivelEscolaridad'])
+    people['idProfesion'] = get_profesion(people['idProfesion'])
+    people['idProvincia'] = get_provincias(people['idProvincia'])
 
-    return people['hydra:member'][0]
+    return people
 
 
 def get_category(id):
